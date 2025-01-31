@@ -1,0 +1,10 @@
+No olvidar hacer npm init -y
+
+No olvidar instalar npm install express axios cheerio cors, puppeteer   ,  puppeteer-extra-plugin-stealth cors
+
+en el package.json: "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": " node backend/app.js"
+  },
+
+  dar a npm start para que funcione el backend
