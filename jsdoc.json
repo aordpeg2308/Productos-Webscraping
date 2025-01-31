@@ -1,0 +1,16 @@
+{
+    "source": {
+      "include": [
+        "backend/app.js", 
+        "backend/webScraping/amazon.js", 
+        "backend/webScraping/game.js", 
+        "frontend/js/formulario.js", 
+        "frontend/js/productos.js"
+      ]
+    },
+    "opts": {
+      "destination": "./docs",
+      "recurse": true
+    }
+  }
+  

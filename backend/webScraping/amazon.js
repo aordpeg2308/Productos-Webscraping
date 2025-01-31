@@ -3,43 +3,52 @@ const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 
 puppeteer.use(StealthPlugin());
 
-const scrapearAmazon = async (producto) => {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
 
-  try {
-   
-    await page.setUserAgent(
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    );
 
-    
-    await page.goto(`https://www.amazon.es/s?k=${producto}`, {
-      waitUntil: 'networkidle2',
-    });
+async function scrapearAmazon(nombreProducto) {
+    try {
+     
+        const browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
 
-   
-    await page.waitForSelector('.s-result-item', { timeout: 5000 });
+        
+        await page.setUserAgent(
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        );
 
-   
-    const precioAmazon = await page.evaluate(() => {
-      
-      const primerProducto = document.querySelector('.s-result-item');
-      if (!primerProducto) return 'Producto no encontrado en Amazon';
+        
+        const url = `https://www.amazon.es/s?k=${encodeURIComponent(nombreProducto)}`;
+        await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-      
-      const precioElemento = primerProducto.querySelector('.a-price .a-offscreen');
-      if (!precioElemento) return 'Precio no disponible';
+        
+        await page.waitForSelector('[role="listitem"]');
 
-      return precioElemento.innerText;
-    });
+        
+        const precio = await page.evaluate(() => {
+            const primerItem = document.querySelector('[role="listitem"]');
+            if (!primerItem) return 'No disponible';
 
-    await browser.close();
-    return precioAmazon;
-  } catch (error) {
-    await browser.close();
-    throw new Error(`Error al buscar el producto en Amazon: ${error.message}`);
-  }
-};
+            const priceWhole = primerItem.querySelector('.a-price-whole');
+            const priceFraction = primerItem.querySelector('.a-price-fraction');
+
+            let price = priceWhole ? priceWhole.innerText : 'No disponible';
+            price += priceFraction ? priceFraction.innerText : '';
+            return price.replace(/\n/g, '') + '€';
+        });
+
+     
+        await browser.close();
+
+        
+        return precio;
+    } catch (error) {
+        console.error("Error al obtener el precio de Amazon:", error);
+        return 'Error';
+    }
+}
+
+
+
+
 
 module.exports = scrapearAmazon;
