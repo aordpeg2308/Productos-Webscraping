@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
   $('#formulario').on('submit', function (e) {
     e.preventDefault();
@@ -21,7 +22,7 @@ $(document).ready(function () {
         }
 
         let productos = JSON.parse(localStorage.getItem('productos')) || [];
-
+        
         const existe = productos.some((producto) => producto.juego.titulo === data.juego.titulo);
         if (existe) {
           mensaje.text('Este producto ya está en tu lista.').css('color', 'red');

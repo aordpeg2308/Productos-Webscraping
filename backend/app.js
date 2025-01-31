@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 
+
 app.get('/buscar', async (req, res) => {
   const { url } = req.query;
 

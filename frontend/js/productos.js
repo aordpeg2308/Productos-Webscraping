@@ -1,4 +1,8 @@
 $(document).ready(function () {
+  /**
+   * Funcion que mostrará los productos de dentro del localStorage
+   * @returns  devuvelve todos los productos
+   */
   function mostrarProductos() {
     let listaProductos = $('#lista-productos');
     let productos = JSON.parse(localStorage.getItem('productos')) || [];
@@ -21,6 +25,12 @@ $(document).ready(function () {
       `).join('')
     );
   }
+
+  /**
+   * Funcion que se utiliza para eliminar el producto
+   * @param {} index  la posición en la que se localiza el producto
+   *  Después  modificará el localStorage  y lo mostrará con el producto eliminado
+   */
 
   function eliminarProducto(index) {
     let productos = JSON.parse(localStorage.getItem('productos')) || [];
